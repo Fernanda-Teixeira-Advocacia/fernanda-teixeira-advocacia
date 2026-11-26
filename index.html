@@ -200,9 +200,46 @@ mainNav.querySelectorAll('a').forEach(link => {
   });
 });
 
+
 document.querySelectorAll('.whatsapp-link').forEach(link => {
   link.addEventListener('click', event => {
     event.preventDefault();
+
+    if (!/^\d{12,13}$/.test(WHATSAPP_NUMBER)) {
+      alert('Número do WhatsApp inválido. Verifique a configuração do site.');
+      return;
+    }
+
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+
+    const novaAba = window.open('about:blank', '_blank');
+    let jaAbriu = false;
+
+    const abrirWhatsApp = () => {
+      if (jaAbriu) return;
+      jaAbriu = true;
+
+      if (novaAba) {
+        novaAba.location.href = whatsappUrl;
+      } else {
+        window.location.href = whatsappUrl;
+      }
+    };
+
+    if (typeof gtag === 'function') {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-18583027598/NlEmCOrS6r4dEI7_iZ1F',
+        'value': 1.0,
+        'currency': 'BRL',
+        'event_callback': abrirWhatsApp,
+        'event_timeout': 2000
+      });
+    } else {
+      abrirWhatsApp();
+    }
+  });
+});
+
 
     if (!/^\d{12,13}$/.test(WHATSAPP_NUMBER)) {
       alert('O link do WhatsApp será ativado quando o número profissional for inserido na configuração do site.');
